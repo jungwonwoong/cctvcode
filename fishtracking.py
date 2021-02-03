@@ -21,7 +21,7 @@ while True:
             cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 3)
             cx = int(mmt['m10']/mmt['m00'])
             cy = int(mmt['m01']/mmt['m00'])
-            sio.emit('posdata', {'xpos': cx, 'ypos': cy})
+            sio.emit('posdata', {'x': cx, 'y': cy})
             #pos = '(' + str(cx) + ',' + str(cy) + ')'
             #cv2.putText(frame, pos, (cx, cy), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (157, 255, 0), 1, cv2.LINE_AA)
     #cv2.imshow('video view', mogframe)
