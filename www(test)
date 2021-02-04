@@ -7,9 +7,6 @@
 var app = require('../app');
 var debug = require('debug')('cctv:server');
 var http = require('http');
-const Datastore = require('nedb');
-const db = new Datastore({ filename: `db/${Date.now()}.db`, autoload: true });
-
 
 /**
  * Get port from environment and store in Express.
@@ -24,6 +21,8 @@ app.set('port', port);
 
 var server = http.createServer(app);
 const io = require('socket.io')(server);
+const Datastore = require('nedb');
+const db = new Datastore({ filename: `db/${Date.now()}.db`, autoload: true });
 
 io.of('/video').on('connection', (socket) => {
   socket.on('videocamera', (image) => {
