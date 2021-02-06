@@ -24,10 +24,11 @@ window.onload = function () {
     })
     
     
-  socket.on('position', (data) => {
+  socket.on('position1', (data) => {
     var x = []
     var y = []
-    var i=0;
+    console.log(data[0]._id)
+    $('#timeshow').html(`${cvDate(data[0]._id)} ~ ${cvDate(data[data.length-1]._id)}`)
       data.forEach((el) => {
        x = x.concat(el.x)
        y = y.concat(el.y)
@@ -51,15 +52,16 @@ window.onload = function () {
       Plotly.newPlot('myDiv', data1, layout);
   });
 
-  socket.on('position1', (data) => {
+  socket.on('position', (data) => {
 
-    var x = [], y = [];
+    var x = [], y = [], z=[];
     var i = 0;
     var stoppro = true;
     Plotly.newPlot('myDiv', [{
       x: x,
       y: y,
-      mode: 'markers'
+      mode: 'markers',
+      marker: {size: 10}
     }], {
       width: 960,
       height: 540,
@@ -71,6 +73,7 @@ window.onload = function () {
       if (i < data.length) {
         x = data[i].x
         y = data[i].y
+        z = data[i]._id
         return true;
       } else {
         return false;
@@ -81,7 +84,7 @@ window.onload = function () {
     function update() {
 
       if (compute(i++)) {
-        console.log(data.length)
+        $('#timeshow').html(`${cvDate(z)}`)
         Plotly.animate('myDiv', {
           data: [{ x: x, y: y }]
         }, {
@@ -100,4 +103,8 @@ window.onload = function () {
 
     requestAnimationFrame(update);
   })
+  function cvDate(date) {
+    let convertDate = new Date(date);
+    return "20/" + (convertDate.getMonth() + 1) + "/" + convertDate.getDate() + ", " + convertDate.getHours() + ":" + convertDate.getMinutes() + ":" + convertDate.getSeconds();
+}
 }
