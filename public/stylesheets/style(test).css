@@ -26,3 +26,9 @@ a {
   height: 540px;
   border: 1px solid green;
 }
+ #timeshow {
+   width: 550px;
+   border: 1px solid blue;
+   font-size: 2em;
+   text-align: center;
+ }
