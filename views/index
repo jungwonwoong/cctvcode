@@ -1,0 +1,7 @@
+extends layout
+
+block content
+  div#onoff on
+  div#video
+    img#image
+  div#plotDiv
