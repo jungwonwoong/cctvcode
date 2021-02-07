@@ -1,0 +1,35 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: rgb(157, 255, 0);
+}
+
+#video {
+  width: 960px;
+  height: 540px;
+  line-height: 540px;
+  border: 1px solid red;
+  text-align: center;
+}
+
+#onoff {
+  width: 60px;
+  height: 30px;
+  border: 1px solid green;
+  font-size: 2em;
+  text-align: center;
+}
+
+#image {
+  vertical-align: middle;
+}
+
+#plotDiv {
+  width: 960px;
+  height: 540px;
+  border: 1px solid green;
+}
+
