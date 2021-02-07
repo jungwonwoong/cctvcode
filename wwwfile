@@ -1,0 +1,118 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var debug = require('debug')('cctv:server');
+var http = require('http');
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+const io = require('socket.io')(server);
+const Database = require('nedb')
+//const db = new Database({ filename: `db/${Date.now()}.db`, autoload: true});
+
+io.of('/user').on('connection', (socket) => {
+  console.log('user 와 연결됨');
+  socket.on('vOnOff', (data) => {
+    io.of('/video').emit('stopvideo', data)
+  })
+  const dbtest = new Database('db/1612521275227.db');
+  dbtest.loadDatabase();
+  dbtest.find({}, (err, docs) => {
+    socket.emit('position', docs);
+  });
+
+})
+
+io.of('/video').on('connection', (socket) => {
+  console.log('video 와 연결됨');
+  socket.on('videocamera', (image) => {
+    var frame = Buffer.from(image, 'base64').toString();
+    io.of('/user').emit('video', frame);
+  })
+  socket.on('posdata', (data) => {
+    //db.insert({ _id: Date.now(), x: data.x, y: data.y})
+  })
+})
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
